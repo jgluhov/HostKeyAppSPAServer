@@ -6,6 +6,8 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../models/user').User;
+const City = require('../models/city').City;
+const Institution = require('../models/institution').Institution;
 
 router.get('/', (req, res) => {
 	res.sendStatus(200);
@@ -18,11 +20,15 @@ router.get('/users', (req, res) => {
 });
 
 router.get('/cities', (req, res) => {
-	res.json({message: 'OK'});
+	City.find({}, (err, cities) => {
+		res.json({cities: cities});
+	})
 });
 
 router.get('/institutions', (req, res) => {
-	res.json({message: 'OK'});
+	Institution.find({}, (err, institutions) => {
+		res.json({institutions: institutions});
+	})
 });
 
 router.post('/users', (req, res) => {
