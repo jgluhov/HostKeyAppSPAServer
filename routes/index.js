@@ -4,6 +4,7 @@
 'use strict';
 
 const express = require('express');
+const url = require('url');
 const router = express.Router();
 const User = require('../models/user').User;
 const City = require('../models/city').City;
@@ -14,6 +15,8 @@ router.get('/', (req, res) => {
 });
 
 router.get('/users', (req, res) => {
+	console.log(req.query);
+
 	User.find({}).populate(['city','institution']).exec((err, users) => {
 		res.json({users: users});
 	})
