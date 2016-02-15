@@ -47,7 +47,6 @@ router.post('/users', (req, res) => {
 		city: req.body.item.cityID,
 		institution: req.body.item.institutionID
 	});
-	console.log(user);
 	user.save((err, saved) => {
 		if (err) throw err;
 		User.populate(saved, [
