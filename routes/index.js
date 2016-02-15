@@ -4,7 +4,6 @@
 'use strict';
 
 const express = require('express');
-const url = require('url');
 const router = express.Router();
 const User = require('../models/user').User;
 const City = require('../models/city').City;
@@ -15,9 +14,17 @@ router.get('/', (req, res) => {
 });
 
 router.get('/users', (req, res) => {
-	console.log(req.query);
 
-	User.find({}).populate(['city','institution']).exec((err, users) => {
+	let query = User.find({});
+
+	if(Object.keys(req.query).length) {
+		if(req.query.cities)
+			query.where('city').in(req.query.cities.split(','));
+		if(req.query.institutions)
+			query.where('institution').in(req.query.institutions.split(','));
+	}
+
+	query.populate(['city','institution']).exec((err, users) => {
 		res.json({users: users});
 	})
 });
@@ -54,7 +61,7 @@ router.post('/users', (req, res) => {
 });
 
 router.delete('/users/:id', (req, res) => {
-	User.findOneAndRemove(req.params.id, (err) => {
+	User.findByIdAndRemove(req.params.id, (err) => {
 		if (err) throw err;
 		res.json({message: 'OK'});
 	});
@@ -71,7 +78,7 @@ router.post('/cities', (req, res) => {
 });
 
 router.delete('/cities/:id', (req, res) => {
-	City.findOneAndRemove(req.params.id, (err) => {
+	City.findByIdAndRemove(req.params.id, (err) => {
 		if (err) throw err;
 		res.json({message: 'OK'});
 	});
@@ -88,7 +95,7 @@ router.post('/institutions', (req, res) => {
 });
 
 router.delete('/institutions/:id', (req, res) => {
-	Institution.findOneAndRemove(req.params.id, (err) => {
+	Institution.findByIdAndRemove(req.params.id, (err) => {
 		if (err) throw err;
 		res.json({message: 'OK'});
 	});
